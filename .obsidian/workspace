@@ -1,0 +1,105 @@
+{
+  "main": {
+    "id": "7704b291426d0131",
+    "type": "split",
+    "children": [
+      {
+        "id": "41613fa61e2c4cf8",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "journals/2022_01_12.md",
+            "mode": "source"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "0ae4302c26f1cc5c",
+    "type": "split",
+    "children": [
+      {
+        "id": "da27796a11015a16",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "df5ddde319b662d4",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "7367798bccca77dc",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "f0f4c39d95d313c0",
+    "type": "split",
+    "children": [
+      {
+        "id": "97692141ccbe36a0",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c54bf6beb6e14194",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "journals/2022_01_12.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "afc1fc5dfc5268d9",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "journals/2022_01_12.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "41613fa61e2c4cf8",
+  "lastOpenFiles": [
+    "journals/2022_01_12.md",
+    "README.md",
+    "pages/contents.md"
+  ]
+}
