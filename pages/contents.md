@@ -1,0 +1,21 @@
+- Technology
+	- [[Linux]]
+	- [[Ansible]]
+	- [[MySQL]]
+	- [[Oracle]]
+	- [[Elastic Search]]
+	- [[Kubenetes]]
+	- [[Docker]]
+	- [[Redis]]
+	- [[Zabbix]]
+	- [[Kafka]]
+	- [[Prometheus]]
+	- [[Nginx]]
+	- [[Jenkins]]
+	-
+- [[Jump Server]]
+- [[Archery SQL]]
+- [[Dolphin Scheduler]]
+- [[Nexus]]
+-
+-
