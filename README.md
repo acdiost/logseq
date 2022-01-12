@@ -1,5 +1,5 @@
 - # logseq
-  logseq 笔记记录
+  [logseq](https://logseq.com/) 笔记记录
 -
 - 没有目录概念，层级即目录
 -
