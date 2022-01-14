@@ -1,6 +1,6 @@
 - # logseq
   [logseq](https://logseq.com/) 笔记记录
--
+- **访问：[acdiost.github.io](https://acdiost.github.io)**
 - 没有目录概念，层级即目录
 -
 - ## 初始化

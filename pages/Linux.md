@@ -8,3 +8,4 @@
 - [[Linux shell snippets]]
 - [[Linux VNC 远程连接]]
 - [[Linux ssh 配置]]
+- [[Linux 安全配置]]
