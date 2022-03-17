@@ -38,7 +38,10 @@
 	  # 进入系统前检查基本信息
 	  # author: acdiost
 	  
+	  # 历史命令的详细记录
 	  export HISTTIMEFORMAT="%F %T \$(who -u am i 2>/dev/null | awk '{print \$NF}' | sed -e 's/[()]//g') \$(whoami) "
+	  # 登录会话过期时间 30 分钟
+	  export TMOUT=1800
 	  
 	  banner_file=\$(mktemp)
 	  

@@ -18,6 +18,9 @@
   echo $per
   
   
+  # 统计 TCP/IP 建立的连接状态
+  netstat -n | awk '/^tcp/{++state[$NF]}END{for(key in state) print key, "\t", state[key]}'
+  
   # 清空文件里内容不删除文件
   for i in `find path -type f -size +1G`;do echo > $i;done
   

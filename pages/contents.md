@@ -12,10 +12,15 @@
 	- [[Prometheus]]
 	- [[Nginx]]
 	- [[Jenkins]]
+	- [[Hadoop]]
+	- [[zookeeper]]
+	- [[Nifi]]
 	-
 - [[Jump Server]]
 - [[Archery SQL]]
 - [[Dolphin Scheduler]]
 - [[Nexus]]
--
--
+- [[等级保护]]
+- [[故障预案报告]]
+- [[运维规程报告]]
+- [[vagrant]]

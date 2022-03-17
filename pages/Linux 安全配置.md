@@ -1,6 +1,7 @@
 - ## 系统日志
 - 修改日志保存时间以满足等保要求
 - CentOS `/etc/logrotate.conf`
+  id:: 61df8c8b-3524-442e-9dac-7747c78c94e5
   ```conf
   # 保存一年
   monthly
