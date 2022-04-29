@@ -13,8 +13,10 @@
 	- [[Nginx]]
 	- [[Jenkins]]
 	- [[Hadoop]]
+	- [[Sqoop]]
 	- [[zookeeper]]
 	- [[Nifi]]
+	- [[Ambari]]
 	-
 - [[Jump Server]]
 - [[Archery SQL]]
