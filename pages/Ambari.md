@@ -3,16 +3,16 @@
   Version: 1.0.0
   Desc: ambari 部署手册
 -
-- 安装手册： [https://docs.cloudera.com/HDPDocuments/Ambari-2.7.1.0/bk_ambari-installation/bk_ambari-installation.pdf](https://docs.cloudera.com/HDPDocuments/Ambari-2.7.5.0/bk_ambari-installation/bk_ambari-installation.pdf)
+- 安装手册： [https://docs.cloudera.com/HDPDocuments/Ambari-2.7.5.0/bk_ambari-installation/bk_ambari-installation.pdf](https://docs.cloudera.com/HDPDocuments/Ambari-2.7.5.0/bk_ambari-installation/bk_ambari-installation.pdf)
 -
 - rpm 安装包：https://www.makeopensourcegreatagain.com/rpms/
 -
 - 安装要求：
 	- CentOS 7.9
-	- scp, curl, unzip, tar, wget, and gcc* (ansible chrony nginx mysql)
+	- scp, curl, unzip, tar, wget, and gcc* (ansible chrony nginx mysql5.7)
 	- OpenSSL
 	- Python2.7.12（python-devel*）
-	- 至少 1GB 内存，500M 空闲（16G 以上）
+	- 至少 1GB 内存，500M 空闲（8G 以上）
 	- 20GB 存储
 	- 文件描述符大于 10000 `ulimit -Sn && ulimit -Hn`
 		- 设置： `ulimit -n 10000`
@@ -31,23 +31,6 @@
 -
 - ---
 -
-- 设置主机名（填写好 ansible hosts 后可批量设置）
-	- 将所有的机器主机名设置好后，写入 `/etc/hosts`
-	- ```bash
-	  # 满足 FQDN （可选）
-	  hostnamectl set-hostname ambari001.domain.com
-	  
-	  while read LINE
-	  do
-	      sed -i "/$(echo ${LINE}|grep -oP '(?<=[^a-z])[^ ]*(?= *=)') =/d; $ a${LINE}" /etc/hosts
-	  done <<-EOF
-	  10.111.30.8    ambari001.domain.com
-	  10.111.30.9    ambari002.domain.com
-	  10.111.30.10   ambari003.domain.com
-	  EOF
-	  
-	  ```
--
 - 配置本地源 （需要提前准备 ambari rpm 离线包）有互联网跳过此步骤，后面有在线源
 	- ```bash
 	  # 在有互联网的环境准备 rpm 离线包,完成后传输至内网
@@ -55,11 +38,12 @@
 	  https://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm
 	  
 	  yum install --downloadonly --downloaddir=./rpms yum-utils createrepo nginx \
-	  ansible unzip gcc* chrony mysql-community-server lrzsz mysql-connector-java*
+	  ansible unzip gcc* chrony mysql-community-server lrzsz mysql-connector-java* \
+	  postgresql-server postgresql
 	  
 	  tar -czf rpms.tar.gz rpms
 	  
-	  # 无互联网需本地安装 rpm -i nginx-xxx.rpm
+	  # 无互联网需本地安装 rpm -i nginx-xxx.rpm createrepo-xxx.rpm
 	  yum install createrepo nginx -y
 	  
 	  rm -rf /usr/share/nginx/html/*
@@ -84,7 +68,7 @@
 	  [base]
 	  gpgcheck=0
 	  enabled=1
-	  baseurl=http://ip:port/basepkg
+	  baseurl=http://ip:port/rpms
 	  name=base
 	  EOF
 	  
@@ -104,7 +88,6 @@
 	  HDP Base URL                 http://<web.server>/hdp/HDP/<OS>/3.x/updates/<latest.version>
 	  HDP-UTILS Base URL     http://<web.server>/hdp/HDP-UTILS-<version>/repos/<OS>
 	-
--
 - 安装基础软件 (无网络需要提前准备离线包 lrzsz chrony ansible nginx wget mysql )
 	- ```bash
 	  yum install ansible wget lrzsz -y
@@ -115,22 +98,55 @@
 	  # 在 /etc/ansible/hosts 中填写
 	  # server 节点
 	  [server]
-	  10.111.30.8    ansible_ssh_port=22 ansible_ssh_user=root ansible_ssh_pass=123456
+	  10.111.30.8    hostname=ambari001.domain.com ansible_ssh_port=22 ansible_ssh_user=root ansible_ssh_pass=123456
 	  
 	  # agent 节点
 	  [agent]
-	  10.111.30.9    ansible_ssh_port=22 ansible_ssh_user=root ansible_ssh_pass=123456
-	  10.111.30.10   ansible_ssh_port=22 ansible_ssh_user=root ansible_ssh_pass=123456
+	  10.111.30.9    hostname=ambari002.domain.com ansible_ssh_port=22 ansible_ssh_user=root ansible_ssh_pass=123456
+	  10.111.30.10   hostname=ambari003.domain.com ansible_ssh_port=22 ansible_ssh_user=root ansible_ssh_pass=123456
 	  
 	  
 	  # 修改系统编码，中文可能会有问题
 	  ansible all -m shell -a "echo 'LANG=en_US.UTF-8' > /etc/locale.conf"
 	  
 	  # 将基础文件复制至 agent 节点
-	  ansible agent -m copy -a 'src=/etc/hosts dest=/etc/hosts'
 	  ansible agent -m copy -a 'src=/etc/yum.repos.d/base.repo dest=/etc/yum.repos.d/base.repo'
 	  ansible agent -m copy -a 'src=/etc/yum.repos.d/ambari.repo dest=/etc/yum.repos.d/ambari.repo'
 	  
+	  ```
+-
+- 设置主机名（填写好 ansible hosts 后可批量设置）
+	- 将所有的机器主机名设置好后，写入 `/etc/hosts`
+	- ```bash
+	  # 满足 FQDN （可选）
+	  hostnamectl set-hostname ambari001.domain.com
+	  
+	  while read LINE
+	  do
+	      sed -i "/$(echo ${LINE}|grep -oP '(?<=[^a-z])[^ ]*(?= *=)') =/d; $ a${LINE}" /etc/hosts
+	  done <<-EOF
+	  10.111.30.8    ambari001.domain.com
+	  10.111.30.9    ambari002.domain.com
+	  10.111.30.10   ambari003.domain.com
+	  EOF
+	  
+	  ansible agent -m copy -a 'src=/etc/hosts dest=/etc/hosts'
+	  
+	  # ansible-playbook
+	  ---
+	  - hosts: all
+	    remote_user: root
+	    gather_facts: true
+	  
+	    tasks:
+	    - name: Set a hostname
+	      ansible.builtin.hostname:
+	        name: '{{ hostname|quote }}'
+	    - name: "Add to hosts"
+	      lineinfile:
+	        dest: /etc/hosts
+	        line: "{{ ansible_default_ipv4.address }}    {{ hostname|quote }}"
+	      run_once: True
 	  ```
 -
 - 基础环境优化
@@ -195,15 +211,16 @@
 	  
 	  vm.swappiness = 0
 	  
-	  fs.file-mx = 6815744                      # 文件描述符总数
-	  fs.aio-max-nr = 1048576                   # 最大并发I/O请求数
-	  net.core.rmem_default = 262144            # 操作系统接收缓冲区的默认大小
-	  net.core.wmem_default = 262144            # 操作系统发送缓冲区的默认大小
-	  net.core.rmem_max = 16777216              # 系统接收缓冲区最大值
-	  net.core.wmem_max = 16777216              # 系统发送缓冲区最大值
-	  net.ipv4.tcp_rmem = 409626214416777216    # 接收窗口尺寸的最小、默认、最大值
-	  net.ipv4.tcp_wmem = 409626214416777216    # 发送窗口尺寸的最小、默认、最大值
+	  fs.file-mx = 6815744                          # 文件描述符总数
+	  fs.aio-max-nr = 1048576                       # 最大并发I/O请求数
+	  net.core.rmem_default = 262144                # 操作系统接收缓冲区的默认大小
+	  net.core.wmem_default = 262144                # 操作系统发送缓冲区的默认大小
+	  net.core.rmem_max = 16777216                  # 系统接收缓冲区最大值
+	  net.core.wmem_max = 16777216                  # 系统发送缓冲区最大值
 	  EOF
+	  
+	  ansible all -m shell -a 'sysctl -w net.ipv4.tcp_wmem="4096 262144 16777216"'
+	  ansible all -m shell -a 'sysctl -w net.ipv4.tcp_rmem="4096 262144 16777216"'
 	  
 	  ansible agent -m copy -a 'src=/etc/sysctl.conf dest=/etc/sysctl.conf'
 	  ansible all -m shell -a "swapoff -a"
@@ -224,6 +241,7 @@
 	  ```
 -
 - 时间同步 (无互联网需配置时间服务器)
+	- [[Chrony 时间同步]]
 	- ```bash
 	  ansible all -m yum -a 'name=chrony state=latest'
 	  ansible all -m service -a 'name=chronyd state=started enabled=yes'
@@ -231,10 +249,24 @@
 	  ansible all -m shell -a "chronyc sources"
 	  ```
 -
-- 网络配置 `vi /etc/sysconfig/network`  可通过 ansible-playbook 批量设置
+- 网络配置 `vi /etc/sysconfig/network`  可通过 ansible-playbook 模板批量设置
 	- ```bash
 	  NETWORKING=yes
 	  HOSTNAME=<fully.qualified.domain.name>
+	  
+	  
+	  # vi /root/network.j2
+	  NETWORKING=yes
+	  HOSTNAME={{ hostname|quote }}
+	  
+	  
+	  # vi set_network.yml
+	  ---
+	  - hosts: all
+	    remote_user: root
+	    tasks:
+	    - name: Set a network
+	      template: src=/root/network.j2 dest=/etc/sysconfig/network
 	  ```
 -
 - 防火墙配置
@@ -278,7 +310,15 @@
 	  # 初始化用户和数据库
 	  mysql -u root -p
 	  
+	  -- 密码验证策略低要求(0 或 LOW 代表低级)
+	  set global validate_password_policy = 'LOW';
+	  -- 密码长度
+	  set global validate_password_length = 6;
+	  
 	  ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass4!';
+	  GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+	  FLUSH PRIVILEGES;
+	  
 	  
 	  create database hive;
 	  create database oozie;

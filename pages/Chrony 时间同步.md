@@ -13,7 +13,8 @@
 - ## 配置文件
 - `/ect/chrony.conf (ubuntu: /etc/chrony/)`
 - ### 客户端
-	- ```
+	- id:: 620da90c-4bee-4519-9f81-cc4252e5a929
+	  ```
 	  server ntp1.aliyun.com iburst
 	  server ntp2.aliyun.com iburst
 	  server ntp3.aliyun.com iburst
