@@ -267,7 +267,7 @@
   EOF
   
   # 确保三个账户存在
-  chmod 750 /home/*
+  # chmod 750 /home/* # 若有应用在此目录下会导致在该目录下的部分程序异常
   useradd dawn
   usermod -G dawn dawn
   echo "dawn:Dawn@1234." | chpasswd
